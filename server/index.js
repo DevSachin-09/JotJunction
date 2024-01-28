@@ -1,6 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const dbConnect = require('./config/database')
+const router = require('./routes/user.routes')
 
 dotenv.config()
 
@@ -12,3 +13,9 @@ app.listen(PORT, () => {
 })
 
 dbConnect()
+
+app.get('/', (req, res) => {
+    res.send("Hello World")
+})
+
+app.use('/api', router)
