@@ -1,16 +1,18 @@
 const User = require("../models/user.model")
 const bcrypt = require('bcrypt')
+const { errorHandler } = require("../utils/error")
 
-exports.authController = async (req, res) => {
+exports.authController = async (req, res, next) => {
     try {
         const { username, email, password } = req.body
 
         const existingUser = await User.findOne({ email })
         if (existingUser) {
-            return res.status(400).json({
-                success: false,
-                message: "User already registered"
-            })
+            // return res.status(400).json({
+            //     success: false,
+            //     message: "User already registered"
+            // })
+            next(errorHandler(400, "User already registered"))
         }
 
         if (!email || !password || !username || email === '' || password === '' || email === '') {
@@ -40,10 +42,6 @@ exports.authController = async (req, res) => {
         })
 
     } catch (error) {
-        console.error(error)
-        return res.status(500).json({
-            success: false,
-            message: "User cannot be created, please try again later"
-        })
+        next(error)
     }
 }
